@@ -1,0 +1,123 @@
+{% load static %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>16S</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{% static "login/css/login.css" %}" />
+
+<link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/overrides.css" %}" />
+{% if LANGUAGE_BIDI %}
+<link href="{% static "bootstrap-rtl/css/bootstrap-rtl.min.css" %}" rel="stylesheet"/>
+<link href="{% static "bootstrap-rtl/css/bootstrap-flipped.min.css" %}" rel="stylesheet"/>
+{% endif %}
+
+<script type="text/javascript">
+//<![CDATA[
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";
+    window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";
+//]]>
+</script>
+<script src="{% static "admin/js/jquery-1.9.1.min.js" %}"></script>
+<script src="{% static "admin/js/jquery-migrate-1.2.1.min.js" %}"></script>
+<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+<script type="text/javascript">
+//<![CDATA[
+        (function($) {
+            $(document).ready(function() {
+                $('input[type="submit"]').addClass('btn');
+                $('[title]').tooltip();
+            });
+        }(jQuery));
+//]]>
+</script>
+
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="/admin/">16S 分析</a>
+                        </div>
+                        <div id="header-navbar-collapse" class="navbar-collapse collapse navbar-right">
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <strong>{{ username }}</strong> <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                            <li><a href="/login/">View site</a></li>
+                                        <li><a href="/admin/password_change/">Change password</a></li>
+                                        <li><a href="/admin/logout/">Log out</a></li>
+                                    </ul>
+                                </li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown" id="recent-actions-module">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recent Actions <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        #DOTO
+                                    </ul>
+                                </li>
+
+
+
+
+
+
+
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+                <ol>
+                    <li>
+                        <a href="/admin/addgroup/">upload File</a>
+                    </li>
+                    <li>
+                        <a href="/admin/anlysis/">Analysis</a>
+                    </li>
+                    <li>
+                        <a href="/admin/download/">download</a>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-md-6 column">
+            </div>
+            <div class="col-md-4 column">
+            </div>
+        </div>
+    </div>
+
+
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
