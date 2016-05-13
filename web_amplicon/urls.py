@@ -19,6 +19,9 @@ from login import views
 #admin.autodiscover()
 urlpatterns = [
     url(r'^login/',views.login),
+    url(r'^addgroup/',views.addgroup),
+    url(r'^analysis/',views.analysis),
+    url(r'^download/',views.download),
     url(r'^admin/', admin.site.urls)
 
 ]

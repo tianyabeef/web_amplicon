@@ -1,0 +1,72 @@
+{% load static %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>16S</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{% static "login/css/login.css" %}" />
+
+<link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/overrides.css" %}" />
+{% if LANGUAGE_BIDI %}
+<link href="{% static "bootstrap-rtl/css/bootstrap-rtl.min.css" %}" rel="stylesheet"/>
+<link href="{% static "bootstrap-rtl/css/bootstrap-flipped.min.css" %}" rel="stylesheet"/>
+{% endif %}
+
+<script type="text/javascript">
+//<![CDATA[
+    window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";
+    window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";
+//]]>
+</script>
+<script src="{% static "admin/js/jquery-1.9.1.min.js" %}"></script>
+<script src="{% static "admin/js/jquery-migrate-1.2.1.min.js" %}"></script>
+<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+<script type="text/javascript">
+//<![CDATA[
+        (function($) {
+            $(document).ready(function() {
+                $('input[type="submit"]').addClass('btn');
+                $('[title]').tooltip();
+            });
+        }(jQuery));
+//]]>
+</script>
+
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                {% block head %} {% endblock %}
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+                <ol>
+                    <li>
+                        <a href="/addgroup/">upload File</a>
+                    </li>
+                    <li>
+                        <a href="/analysis/">Analysis</a>
+                    </li>
+                    <li>
+                        <a href="/download/">download</a>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-md-6 column">
+                <!--主要板块-->
+                {% block main %}
+
+                {% endblock %}
+            </div>
+            <div class="col-md-4 column">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
