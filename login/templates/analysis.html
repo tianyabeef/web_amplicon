@@ -29,42 +29,9 @@
                 </div>
 {% endblock %}
 {% block main %}
-    <div class="container">
-        <div class="row clearfix">
-            {% if error == "y" %}
-            <div class="col-md-12 column error">
-                <p>无法上传大于10M的文件</p>
-            </div>
-            {% elif error == "n" %}
-                <div class="col-md-12 column error">
-                <p>上传成功</p>
-                </div>
-            {% endif %}
-        </div>
-	<div class="row clearfix">
-		<div class="col-md-12 column">
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<form enctype="multipart/form-data" method="POST" action="/addgroup/">
-						<div class="form-group">
-                            {{ form.as_p }}
-						</div>
-						<button type="submit" class="btn btn-primary">上传文件</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-
-{% comment %}
-    <div class="file-box">
-        <form enctype="multipart/form-data" method="POST" action="/addgroup/">
-           {{ form.as_p }}
-
-           <input type="submit" value="上传文件" />
-        </form>
-    </div>{% endcomment %}
+    <h1>分析页面：</h1>
+    <form method = 'post' enctype="multipart/form-data">
+        {{ af.as_p }}
+        <button type="submit" class="btn btn-primary" >提交</button>
+    </form>
 {% endblock %}
