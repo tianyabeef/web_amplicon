@@ -133,9 +133,12 @@ def analysis(request):
             util.setSelf(cf,af,'project','salesman')
             util.setSelf(cf,af,'project','sale_phone')
             util.setSelf(cf,af,'project','sale_email')
+            groupfile = af.value('groupfile')
+            print(groupfile)
             util.setSelf(cf,af,'params','groupfile')
             cf.set('params','pipeline_shell','%s/pipeline.sh'% work_dir)
-            cf.set('params','pipeline_shell'," ".join(af.cleaned_data['raw_data_file'].strip().split("\n")))
+            print(af.cleaned_data['raw_data_file'].strip().split("\n"))
+            cf.set('params','raw_data_file'," ".join(af.cleaned_data['raw_data_file'].strip().split("\n")))
 
 
             #raw_data_dir =af.cleaed_data['raw_data_dir']
