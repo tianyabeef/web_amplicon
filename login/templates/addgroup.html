@@ -29,6 +29,7 @@
                 </div>
 {% endblock %}
 {% block main %}
+    <h1>上传文件页面：</h1>
     <div class="container">
         <div class="row clearfix">
             {% if error == "y" %}
@@ -45,10 +46,8 @@
 		<div class="col-md-12 column">
 			<div class="row clearfix">
 				<div class="col-md-12 column">
-					<form enctype="multipart/form-data" method="POST" action="/addgroup/">
-						<div class="form-group">
-                            {{ form.as_p }}
-						</div>
+					<form enctype="multipart/form-data" method="POST" >
+                            {{ fform.as_p }}
 						<button type="submit" class="btn btn-primary">上传文件</button>
 					</form>
 				</div>

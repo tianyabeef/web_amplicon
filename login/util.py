@@ -26,3 +26,8 @@ def handle_uploaded_file(f):
         print(e)
 
     return file_name
+def setSelf(cf,af,sectionName,name):
+    if not sectionName in cf.sections():
+        cf.add_section(sectionName)
+    value = af.cleaned_data[name]
+    cf.set(sectionName,name,str(value))

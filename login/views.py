@@ -11,15 +11,25 @@ from login.models import User
 from login.models import FileUpload
 from django import forms
 from login import util
+import configparser
 
-TOPIC_CHOICES = (
-    ('leve1', '差评'),
-    ('leve2', '中评'),
-    ('leve3', '好评'),
-)
+group_choices = ()
+
+
+#定义表单模型
+class UserForm(forms.Form):
+    username = forms.CharField(label='用户名：',max_length=100,required=True)
+    password = forms.CharField(label='密码：',widget=forms.PasswordInput())
+#定义上传文件表达模型
+class FileUploadForm(forms.Form):
+    title = forms.CharField(label='标题',required=True)
+    file = forms.FileField(label='选择文件',required=True)
+#分析
 class AnalysisForm(forms.Form):
     #must option
-    groupfile = forms.ChoiceField(label='group文件',required=True,choices=TOPIC_CHOICES)
+
+    groupfile = forms.ModelChoiceField(label='group文件',required=True,queryset=FileUpload.objects.all())
+    raw_data_file = forms.CharField(label="原始文件路径",required=True,widget=forms.Textarea)
     job_id = forms.CharField(label="sge任务名称",required=True)
     data_type = forms.CharField(label='类型:',required=True)
     work_dir = forms.CharField(label='工作目录:',required=True)
@@ -49,14 +59,12 @@ class AnalysisForm(forms.Form):
     sale_phone = forms.IntegerField(label="联系电话",required=True)
     sale_email = forms.EmailField(label="邮箱",required=True)
 
-#定义表单模型
-class UserForm(forms.Form):
-    username = forms.CharField(label='用户名：',max_length=100,required=True)
-    password = forms.CharField(label='密码：',widget=forms.PasswordInput())
-#定义上传文件表达模型
-class FileUploadForm(forms.Form):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
+
+
+
+
+
+
 #登录
 def login(request):
     if request.method == 'POST':
@@ -65,75 +73,85 @@ def login(request):
             #获取表单用户密码
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
-            print(username)
-            print(password)
             #获取的表单数据与数据库进行比较
             user = User.objects.filter(username__exact = username,password__exact = password)
             if user:
+                request.session['username'] = username
+                request.session['password'] = password
                 return render_to_response('success.html',{'username':username})
             else:
-
                 return HttpResponseRedirect('/login/')
     else:
         uf = UserForm()
     return render_to_response('login.html',{'uf':uf})
 #添加gourp
 def addgroup(request):
+    username = (request.session['username'])
+
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
+        fform = FileUploadForm(request.POST, request.FILES)
+        if fform.is_valid():
+            title = fform.cleaned_data['title']
             filename = util.handle_uploaded_file(request.FILES['file'])
-            print(filename)
             if filename == "error :file size >10M can't upload":
                 return HttpResponseRedirect('/addgroup/?error=y')
             else:
-                fu = FileUpload(filename)
-                fu.save()
+                FileUpload.objects.create(title = title,username = username,file = filename)
                 return HttpResponseRedirect('/addgroup/?error=n')
+
     else:
         error = request.GET.get('error')
-        form = FileUploadForm()
+        fform = FileUploadForm()
         if error:
-            return render_to_response("addgroup.html",{'form':form,'error':error})
-        else:
-            return render_to_response("addgroup.html",{'form':form})
+            return render_to_response("addgroup.html",{'fform':fform,'error':error,'username':username})
+    return render_to_response("addgroup.html",{'fform':fform,'username':username})
 #分析
 def analysis(request):
+    username = (request.session['username'])
+    group_choices = ((x.file,x.title) for x in FileUpload.objects.filter(username=username))
     if request.method == 'POST':
         af = AnalysisForm(request.POST)
         if af.is_valid():
-            job_id = af.cleaned_data['job_id']
-            data_type = af.cleaed_data['data_type']
-            work_dir = af.cleaed_data['work_dir']
-            #group_files = af.cleaed_data['group_files']
-            #alpha_group_file = af.cleaed_data['alpha_group_file']
+            work_dir = af.cleaned_data['work_dir']
+            cf = configparser.ConfigParser()
+            util.setSelf(cf,af,'params','job_id')
+            util.setSelf(cf,af,'params','data_type')
+            util.setSelf(cf,af,'params','work_dir')
+            util.setSelf(cf,af,'params','require')
+            util.setSelf(cf,af,'params','sequence_platform')
+            util.setSelf(cf,af,'project','project_name')
+            util.setSelf(cf,af,'project','customer_name')
+            util.setSelf(cf,af,'project','project_num')
+            util.setSelf(cf,af,'project','sample_source')
+            util.setSelf(cf,af,'project','sample_type')
+            util.setSelf(cf,af,'project','note_information')
+            util.setSelf(cf,af,'project','project_contacts')
+            util.setSelf(cf,af,'project','phone')
+            util.setSelf(cf,af,'project','email')
+            util.setSelf(cf,af,'project','enterprise_name')
+            util.setSelf(cf,af,'project','enterprise_address')
+            util.setSelf(cf,af,'project','salesman')
+            util.setSelf(cf,af,'project','sale_phone')
+            util.setSelf(cf,af,'project','sale_email')
+            util.setSelf(cf,af,'params','groupfile')
+            cf.set('params','pipeline_shell','%s/pipeline.sh'% work_dir)
+            cf.set('params','pipeline_shell'," ".join(af.cleaned_data['raw_data_file'].strip().split("\n")))
+
+
             #raw_data_dir =af.cleaed_data['raw_data_dir']
             #fq_for_merge =af.cleaed_data['fq_for_merge']
             #name_list =af.cleaed_data['name_list']
-            require =af.cleaed_data['require']
             #pipeline_shell =af.cleaed_data['pipeline_shell']
-            sequence_platform =af.cleaed_data['sequence_platform']
-            project_name =af.cleaed_data['project_name']
-            customer_name =af.cleaed_data['customer_name']
-            project_num =af.cleaed_data['project_num']
-            sample_source =af.cleaed_data['sample_source']
-            sample_type =af.cleaed_data['sample_type']
-            note_information =af.cleaed_data['note_information']
-            project_contacts =af.cleaed_data['project_contacts']
-            phone =af.cleaed_data['phone']
-            email =af.cleaed_data['email']
-            enterprise_name =af.cleaed_data['enterprise_name']
-            enterprise_address =af.cleaed_data['enterprise_address']
-            salesman =af.cleaed_data['salesman']
-            sale_phone =af.cleaed_data['sale_phone']
-            sale_email =af.cleaed_data['sale_email']
+
             os.popen('mkdir %s' % work_dir)
             os.popen('mkdir %s/group/' % work_dir)
             os.popen('mkdir %s/rawData' % work_dir)
-            return render_to_response('success.html')
+            cf.write(open("%s/work_pre.cfg" % work_dir, "w"))
+            return render_to_response('success.html',{'username':username})
     else:
-        af = AnalysisForm()
-    return render_to_response("analysis.html",{'af':af})
+        af = AnalysisForm({'groupfile':group_choices})
+    return render_to_response("analysis.html",{'af':af,'username':username})
 #下载结果
 def download(request):
+    username = (request.session['username'])
     pass
