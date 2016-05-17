@@ -14,6 +14,6 @@ class FileUpload(models.Model):
     username = models.CharField(max_length=50)
     file = models.CharField(max_length=50)
     def __str__(self):
-        return self.title
+        return self.file
 admin.site.register(User)
 

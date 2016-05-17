@@ -10,3 +10,4 @@ git.sh
 .idea/
 .name
 db.sqlite3
+media/

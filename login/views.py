@@ -28,7 +28,7 @@ class FileUploadForm(forms.Form):
 class AnalysisForm(forms.Form):
     #must option
 
-    groupfile = forms.ModelChoiceField(label='group文件',required=True,queryset=FileUpload.objects.all())
+    group_files_ori = forms.ModelChoiceField(label='group文件',required=True,queryset=FileUpload.objects.all())
     raw_data_file = forms.CharField(label="原始文件路径",required=True,widget=forms.Textarea)
     job_id = forms.CharField(label="sge任务名称",required=True)
     data_type = forms.CharField(label='类型:',required=True)
@@ -133,14 +133,14 @@ def analysis(request):
             util.setSelf(cf,af,'project','salesman')
             util.setSelf(cf,af,'project','sale_phone')
             util.setSelf(cf,af,'project','sale_email')
-            groupfile = af.value('groupfile')
-            print(groupfile)
-            util.setSelf(cf,af,'params','groupfile')
+            util.setSelf(cf,af,'params','group_files_ori')
             cf.set('params','pipeline_shell','%s/pipeline.sh'% work_dir)
-            print(af.cleaned_data['raw_data_file'].strip().split("\n"))
-            cf.set('params','raw_data_file'," ".join(af.cleaned_data['raw_data_file'].strip().split("\n")))
-
-
+            raw_data_file = ''
+            tabs = af.cleaned_data['raw_data_file'].strip().split("\n")
+            for t in tabs:
+                t = t.strip()
+                raw_data_file = '%s %s' % (raw_data_file,t)
+            cf.set('params','fq_for_merge',raw_data_file)
             #raw_data_dir =af.cleaed_data['raw_data_dir']
             #fq_for_merge =af.cleaed_data['fq_for_merge']
             #name_list =af.cleaed_data['name_list']
