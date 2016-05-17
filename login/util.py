@@ -11,7 +11,8 @@ def handle_uploaded_file(f):
     file_name = ""
 
     try:
-        path = "media/editor" + time.strftime('/%Y/%m/%d/%H/%M/%S/')
+        pwd = os.getcwd()
+        path = "%s/media/editor/%s" %(pwd,time.strftime('/%Y/%m/%d/%H/%M/%S/'))
         if not os.path.exists(path):
             if f.size/(1024*1024)>10:
                 return "error :file size >10M can't upload"
