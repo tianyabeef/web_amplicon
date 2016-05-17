@@ -1,0 +1,11 @@
+*.pyc
+test/
+test_name/
+qiime/
+biopython/
+hy/
+git.sh
+.idea/
+.metadata/
+.idea/
+.name
